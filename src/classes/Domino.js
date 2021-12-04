@@ -1,17 +1,18 @@
 export default class Domino {
   constructor(scene, dominoConfig) {
+    // domino should keep direction in mind
+    //
     this.name = 'domino';
     this.left = dominoConfig.left;
     this.right = dominoConfig.right;
     this.points = dominoConfig.left + dominoConfig.right;
-    this.inverseLeft = this.right;
-    this.inverseRight = this.left;
+    this.playableSide;
     this.sprite = dominoConfig.sprite;
     this.frame = dominoConfig.frame;
     this.inverseFrame = dominoConfig.inverseFrame;
     this.next = null;
     this.previous = null;
-    this.isDouble = dominoConfig.isDouble;
+    this.isDouble = this.left === this.right ? true : false;
     this.render = (x, y, type = 'player', inverse = false) => {
       // render dominos in game as player dominos
       if (type === 'player' || (this.left && this.right && type === 'player')) {
@@ -19,6 +20,8 @@ export default class Domino {
       } else {
         this.sprite = 'blanks';
       }
+
+      if (!this.points) this.sprite = 'blanks';
       // .sprite you can set frame from spritesheet
       let domino = scene.add
         .sprite(x, y, this.sprite, this.frame)
@@ -33,7 +36,8 @@ export default class Domino {
           inverseRight: this.inverseRight,
           type: type,
           sprite: this.sprite,
-          totalPoints: this.points,
+          points: this.points,
+          isDouble: this.isDouble,
         });
       if (type === 'player' || (!this.points && type)) {
         scene.input.setDraggable(domino);
