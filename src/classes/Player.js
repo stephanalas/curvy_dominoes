@@ -1,8 +1,11 @@
 export default class Player {
-  constructor(playerName, scene, isBot = true) {
-    this.name = playerName;
+  constructor(playerConfig, scene) {
+    this.id = playerConfig.id;
+    this.name = playerConfig.name;
     this.hand = scene.add.group();
     this.points = 0;
-    this.isBot = isBot;
+    this.isBot = playerConfig.isBot || false;
   }
+
+  // might want to create instance method to play domino
 }
