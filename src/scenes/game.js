@@ -46,6 +46,7 @@ export default class Game extends Phaser.Scene {
       lobby[nextPlayer.name] = nextPlayer;
       return lobby;
     }, {});
+
     dealDominoes(this.dominoes, this.lobby);
     setTimeout(() => startGame(this.lobby, this.gameState), 2000);
   }
@@ -56,36 +57,28 @@ export default class Game extends Phaser.Scene {
       if (player?.isBot) {
         // peform bots play
         // check left and right values of gamestate
-        const playableDominoes = player.checkForPlayableDomino();
+        const playableDomino = player.checkForPlayableDomino();
         if (!playableDominoes.length) {
           player.pluck();
           this.gameState.currentTurn = Object.keys(this.lobby).find(
             (name) => name !== currentTurn
           );
+        } else {
+          // playable Domino is array [domino , 'left' || 'right' || 'both']
+          // orient domino based on second element
+          // tween domino to playable x, y of leftDomino/rightDomino
+          // end turn
         }
-
-        // find a sprite in bot hand matching
-        // left or right values
-        // remove it from group
       } else {
         // can I play if not we pluck dominoes
-        const playableDominoes = player.checkForPlayableDomino();
-
+        const playableDominoes = player.highlightPlayableDominoes();
+        console.log(playableDominoes);
         if (!playableDominoes.length) {
           player.pluck();
           this.gameState.currentTurn = Object.keys(this.lobby).find(
             (name) => name !== currentTurn
           );
         }
-        // I want to check left and right values in gamestate
-        // iterate through current hand
-        // if domino.left or domino.right  values don't match left and right values
-        // make sprite transparent
-        // make dominoes slightly bigger
-        // if it does match add input event listener
-        // once clicked on [matching domino] then we want to show a transparent sprite on a potential play
-        // create domino matching selected sprite
-        // set domino near Left or right value
       }
     }
   }
