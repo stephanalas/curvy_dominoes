@@ -13,14 +13,15 @@ export default class DominoHandler {
         // min = 0 || i = 0
         for (let j = k; j <= max; j++) {
           // j = 0
-          dominoes.push(new Domino(scene, DominoMap[dominoMapCounter]));
+          dominoes.push(
+            new Domino(scene, DominoMap[dominoMapCounter]).setScale(2)
+          );
           dominoMapCounter++;
           // domino double blank
         }
         k++;
       }
-
-      return dominoes.map((dom) => dom.render(700, 300));
+      return dominoes;
     };
 
     this.shuffleDominoes = (dominoes) => {
@@ -45,7 +46,7 @@ export default class DominoHandler {
       let x = 200;
       let y = 500;
       const playerTweens = players[0].hand.getChildren().map((child) => {
-        child.sprite = 'white_dominoes';
+        // child.sprite = 'white_dominoes';
         x += 40;
         offset += 100;
         return {
@@ -56,10 +57,14 @@ export default class DominoHandler {
           onUpdate: function () {
             child.setAngle(90 * this.progress);
           },
+          onComplete: function () {
+            // child.updatePosition();
+          },
         };
       });
       (x = 200), (offset = 0), (y = 100);
       const opponentTweens = players[1].hand.getChildren().map((child) => {
+        // child.sprite = 'blanks';
         x += 40;
         offset += 100;
         return {
@@ -69,6 +74,9 @@ export default class DominoHandler {
           offset,
           onUpdate: function () {
             child.setAngle(90 * this.progress);
+          },
+          onComplete: function () {
+            // child.updatePosition();
           },
         };
       });
@@ -76,7 +84,6 @@ export default class DominoHandler {
         duration: 500,
         tweens: [...playerTweens, ...opponentTweens],
       });
-      scene.gameState.isActive = true;
     };
   }
 }
